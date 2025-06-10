@@ -1,7 +1,7 @@
 <template>
 
     <div class="login-view">
-        <h1>Login</h1>
+        <h1>Login with Firebase</h1>
         <form>
             <div>
                 <label for="username">Username:</label>
@@ -19,24 +19,22 @@
 
 <script lang="ts" setup>
     import { ref } from 'vue';
-    import { AuthService } from '../services/AuthService';
-
+    import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+    
     const username = ref("");
     const password = ref("");
 
     const authLogin = async () => {
-        const Auth = new AuthService();
-        await Auth.login(username.value, password.value)
-            .then(response => {
-                console.log('Login successful:', response);
-                // Handle successful login, e.g., redirect to dashboard
-            })
-            .catch(error => {
-                console.error('Login failed:', error);
-                // Handle login failure, e.g., show an error message
-            });
+        const auth = getAuth();
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value);
+            console.log('Login successful:', userCredential);
+            // Handle successful login, e.g., redirect to dashboard
+        } catch (error) {
+            console.error('Login failed:', error);
+            // Handle login failure, e.g., show an error message
+        }
     };
-
 
 </script>
 
